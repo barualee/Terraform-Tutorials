@@ -1,0 +1,132 @@
+Terraform
+IAAC tool: infra as code.
+Provision servers.
+
+Terraform - provision servers.
+ Ansible - install/configure software
+Jenkins - deploy apps. 
+
+Terraform init - initialise.
+Export the was secret keys as env variables.
+
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+
+terraform validate
+
+terraform plan —> execute.
+terraform plan
+
+To execute, go apply
+terraform apply
+
+https://github.com/in28minutes/devops-master-class/tree/master/terraform/backup
+
+Terraform console
+
+Bucket details:
+aws_s3_bucket.my_s3_bucket
+Provider bucket name in terraform, not in was
+
+aws_s3_bucket.my_s3_bucket.versioning
+Use any of the JSON keys to get info on the bucket.
+
+You can get o/p on screen via cmdlet in tf file.
+
+Also, compare against local data w/o refresh from cloud.
+Terraform apply -refresh=false
+
+Backup file has old version before changes.
+
+Do not git upload the tf n tf backup files
+
+Terraform destroy to destroy all resources
+
+Multiple tf files management
+
+Terraform validate: to validate the script
+
+T format the files:
+Terraform fmt
+
+Variables; if you do not give values to variables, it asks during execution
+
+Tfvars file to store variables
+Tfvars file precedence over env variables > in file declarations
+
+You can give variables in cli as well.
+
+Terraform plan -refresh=false -var=“iam_username_prefix=VALUE_FROM_CLI”
+Terraform apply -var-file=“some_name.tfvars”
+
+Useful to recycle code for diff environments
+
+In lists, ordering is kept followed,
+So convert to set to avoid modifications
+Count will do modifications based on index, for each will do it based on values instead of indices
+
+#list functions
+toset(var.names)
+distinct(var.names)
+reverse(var.names)
+length(var.names)
+
+concat(var.names, ["new_value"])
+contains(var.names, "ravi")
+sort(var.names)
+range(1,12)
+
+#map functions:
+var.names
+var.names.[key]
+keys(var.names)
+values(var.names)
+
+for ec2 instance, we need following:
+security group -> needs vpc, ingress, egress, 
+public key pair
+subnet id,
+ami
+instance type
+
+some parameters on change force creation of new resource, while others dont, read documentation for this.
+
+aws_default_vpc doesnt create the resource, it adopts it into mgmt.
+you can declaare it as a resource, and use it as variable, instead of hardcoding it.
+
+terraform show # shows all active resources
+
+data types , similar to variables.
+
+console cmd:
+data.aws_subnets.default_subnets
+
+#use target to run a select resource cmd insteaad of entire file.
+
+terraform apply -target=data.aws_subnets.default_subnets
+
+remote-backend creation:
+
+backend states is used to store information and sharing across team.
+locking is used to prevent other users from simultaneously updating stuff.
+dynamo DB can be used for locking.
+also, we store the states in s3 bucket.
+
+s3 bucket:
+allow versioning, prevent deletion, server_side_encrytpion
+
+terraform init -reconfigure
+
+#terraform workspaces
+
+terraform workspace default
+terraform workspace new prod-env
+terraform workspace select default
+terraform workspace show
+
+
+terraform modules:
+each env has separate files.
+
+we can have local vs global variables
+
